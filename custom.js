@@ -18,7 +18,7 @@ const Gameboard = (() => {
 })();
 
 const Player = (name, marker) => { // Creating Player object
-    return (name, marker);
+    return {name, marker};
 };
 
 const Game = () => {
