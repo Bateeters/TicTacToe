@@ -21,7 +21,7 @@ const Player = (name, marker) => { // Creating Player object
     return {name, marker};
 };
 
-const Game = () => {
+const Game = (() => {
     const player1 = Player("Player 1", "X"); // Creating Player 1
     const player2 = Player("Player 2", "O"); // Creating Player 2
     let currentPlayer = player1; // Assigning Player 1 as first turn
@@ -59,4 +59,21 @@ const Game = () => {
     };
 
     return {switchPlayer, getCurrentPlayer, checkWin}; // Return the functions for use outside of Game
-}
+})();
+
+const playTurn = (index) => { // Function to play a turn
+    const player = Game.getCurrentPlayer();  // Establish who's turn it is.
+
+    // Function to check and/or mark selected position
+    if (Gameboard.updateBoard(index, player.marker)) { // place the current player's marker in the selected index spot.
+        const result = Game.checkWin();  // Check the win conditions to see if there's a match.
+        if (result) { // Check to see if checkWin() returns null. If not, is it a tie? if so, console.log "it's a tie!", if there's a winner console.log winner
+            console.log(result === "Tie" ? "It's a tie!" : `${player.name} wins!`);
+            Gameboard.resetBoard(); // Reset board if it's a tie or there's a winner
+        } else {  // if checkWin() returns null, means there is no winner and empty spaces sill exist.
+            Game.switchPlayer(); // Switch to the next player.
+        }
+    } else { //  if selected spot is not empty.
+        console.log("Spot already taken!"); // console.log the spot is already full.
+    }
+};
