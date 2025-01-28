@@ -18,12 +18,12 @@ const Gameboard = (() => {
 })();
 
 const Player = (name, marker) => { // Creating Player object
-    return {name, marker};
+    return { name, marker };
 };
 
 const Game = (() => {
-    const player1 = Player("Player 1", "X"); // Creating Player 1
-    const player2 = Player("Player 2", "O"); // Creating Player 2
+    let player1 = Player("Player 1", "X"); // Creating Player 1
+    let player2 = Player("Player 2", "O"); // Creating Player 2
     let currentPlayer = player1; // Assigning Player 1 as first turn
 
     const switchPlayer = () => { // Setting up player turn alternation
@@ -58,7 +58,12 @@ const Game = (() => {
         return null; // No winner yet
     };
 
-    return {switchPlayer, getCurrentPlayer, checkWin}; // Return the functions for use outside of Game
+    const setPlayerNames = (name1, name2) => {
+        player1.name = name1;
+        player2.name = name2;
+    };
+
+    return {switchPlayer, getCurrentPlayer, checkWin, setPlayerNames}; // Return the functions for use outside of Game
 })();
 
 const playTurn = (index) => { // Function to play a turn
@@ -77,3 +82,50 @@ const playTurn = (index) => { // Function to play a turn
         console.log("Spot already taken!"); // console.log the spot is already full.
     }
 };
+
+// Onclick events for updating the board each turn.
+const DisplayController = (() => { // starting event for spaces
+    const squares = document.querySelectorAll(".square"); // selecting all the spaces on the board
+    const render = () => { // creating function to populate board with saved markers
+        const board = Gameboard.getBoard(); // saving current state of board into a variable for use.
+        squares.forEach((square, index) => {  // grab each square and the index of it
+            square.textContent = board[index];  // update the square's text content with the matching index content saved on the board
+        });
+    };
+
+    squares.forEach((square) => {  // itterate through each square on the board
+        square.addEventListener("click", (e) => { // for each square, create click event listener.
+            const index = e.target.dataset.index; // get find the clicked square's index and save it to a variable for use
+            const player = Game.getCurrentPlayer(); // get the current player and save it to variable for use
+            if (Gameboard.updateBoard(index, player.marker)) { // update the board with the player's marker in the specified index
+                const result = Game.checkWin(); // check if there's a winner from move
+                render(); // update HTML board
+                if (result) { // if checkWin DOES NOT return null
+                    alert(result === "Tie" ? "It's a tie!" : `${player.name} wins!`); // show the returned result.
+                    Gameboard.resetBoard(); // reset board
+                    render(); // update the HTML board
+                } else { // if checkWin DOES return null, there is no winner yet
+                    Game.switchPlayer(); // next player's turn
+                }
+            }
+        });
+    });
+
+    return { render }; // return the updated HTML board to populate
+})();
+
+DisplayController.render(); // populate the returned board in HTML
+
+// Onclick Event for start button
+document.getElementById("startGame").addEventListener("click", () => { // When start button is clicked
+    const player1Name = document.getElementById("player1").value || "Player 1"; // Grab value from player 1 input, if empty default to Player 1
+    const player2Name = document.getElementById("player2").value || "Player 2"; // Grab value from player 2 input, if empty default to Player 2
+    Game.setPlayerNames(player1Name, player2Name); // set player names to the values entered in player fields
+    alert(`Game started! Good luck ${player1Name} and ${player2Name}.`);
+});
+
+// Onclick event for restart button
+document.getElementById("restartGame").addEventListener("click", () => { // when reset button is clicked
+    Gameboard.resetBoard(); // reset the gameboard
+    DisplayController.render(); // populate the returned board in HTML
+});
