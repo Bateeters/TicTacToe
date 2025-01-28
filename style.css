@@ -1,5 +1,10 @@
+body{
+    background-color: whitesmoke;
+}
+
 #gameboard{
-    width: 600px;
+    background: green;
+    width:610px;
     margin: auto;
     display: grid;
     grid-template-columns: repeat(3, 200px);
@@ -7,7 +12,7 @@
 }
 
 .square{
-    background: hotpink;
+    background: whitesmoke;
     width: 200px;
     height: 200px;
     display: flex;
