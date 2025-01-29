@@ -45,7 +45,8 @@ const Game = (() => {
 
             // Checking if the marker in each spot is the same (marker in spot a === b and if true, does it === marker in c)
             if (board[a] && board[a] === board[b] && board[a] === board[c]) { 
-                return board[a]; // Return the winner's marker if all match
+                currentPlayer = player1
+                return currentPlayer; // Return the winner's marker if all match
             }
         }
 

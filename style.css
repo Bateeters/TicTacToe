@@ -1,5 +1,33 @@
 body{
     background-color: whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 100px;
+    gap: 50px;
+}
+
+.gameOptions{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 50%;
+}
+
+.gameOptions button,
+.gameOptions input {
+    font-size: 18px;
+    padding: 5px 10px;
+    margin: auto;
+}
+
+.gameOptions button {
+    width: 25%;
+}
+
+.gameOptions input {
+    width: 50%
 }
 
 #gameboard{
